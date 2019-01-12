@@ -1,0 +1,10 @@
+android_app {
+    name: "Provision",
+    srcs: ["**/*.java"],
+    platform_apis: true,
+    certificate: "platform",
+    privileged: true,
+    optimize: {
+        proguard_flags_files: ["proguard.flags"],
+    },
+}
