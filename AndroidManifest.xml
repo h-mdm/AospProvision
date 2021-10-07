@@ -24,6 +24,12 @@
     <uses-permission android:name="android.permission.WRITE_SETTINGS"/>
     <uses-permission android:name="android.permission.WRITE_SECURE_SETTINGS"/>
 
+    <!-- To start the device owner provisioning workflow  -->
+    <uses-permission android:name="android.permission.DISPATCH_PROVISIONING_MESSAGE"/>
+
+    <!-- To factory reset if provisioning failed -->
+    <uses-permission android:name="android.permission.MASTER_CLEAR"/>
+
     <application>
         <activity android:name="DefaultActivity"
              android:excludeFromRecents="true"
