@@ -20,12 +20,15 @@ import static android.app.admin.DevicePolicyManager.ACTION_PROVISION_MANAGED_DEV
 import static android.app.admin.DevicePolicyManager.EXTRA_PROVISIONING_DEVICE_ADMIN_COMPONENT_NAME;
 import static android.app.admin.DevicePolicyManager.EXTRA_PROVISIONING_DEVICE_ADMIN_PACKAGE_DOWNLOAD_LOCATION;
 import static android.app.admin.DevicePolicyManager.EXTRA_PROVISIONING_DEVICE_ADMIN_SIGNATURE_CHECKSUM;
+import static android.app.admin.DevicePolicyManager.EXTRA_PROVISIONING_LEAVE_ALL_SYSTEM_APPS_ENABLED;
+import static android.app.admin.DevicePolicyManager.EXTRA_PROVISIONING_ADMIN_EXTRAS_BUNDLE;
 import static android.app.admin.DevicePolicyManager.EXTRA_PROVISIONING_TRIGGER;
 
 import static com.android.provision.Utils.DEFAULT_SETTINGS_PROVISION_DO_MODE;
 import static com.android.provision.Utils.SETTINGS_PROVISION_DO_MODE;
 import static com.android.provision.Utils.TAG;
 import static com.android.provision.Utils.getSettings;
+import com.android.provision.Const;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -34,6 +37,7 @@ import android.content.ComponentName;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.provider.Settings;
 import android.util.Log;
 
@@ -138,6 +142,26 @@ public class DefaultActivity extends Activity {
             intent.putExtra(EXTRA_PROVISIONING_DEVICE_ADMIN_PACKAGE_DOWNLOAD_LOCATION,
                     dpcInfo.downloadUrl);
         }
+
+        // Parameters used by Headwind MDM 
+        intent.putExtra(EXTRA_PROVISIONING_LEAVE_ALL_SYSTEM_APPS_ENABLED, true);
+
+	PersistableBundle adminExtras = new PersistableBundle();
+	adminExtras.putString("com.hmdm.BASE_URL", Const.SERVER_URL);
+	adminExtras.putString("com.hmdm.SERVER_PROJECT", Const.SERVER_PATH);
+        if (Const.DEVICE_ID_USE != null) {
+	    adminExtras.putString("com.hmdm.DEVICE_ID_USE", Const.DEVICE_ID_USE);
+	}
+	if (Const.ASSIGN_CONFIG != null) {
+	    adminExtras.putString("com.hmdm.CONFIG", Const.ASSIGN_CONFIG);
+	}
+	if (Const.ASSIGN_GROUPS != null) {
+	    adminExtras.putString("com.hmdm.GROUP", Const.ASSIGN_GROUPS);
+	}
+	if (Const.OPEN_WIFI_SETTINGS) {
+	    adminExtras.putString("com.hmdm.OPEN_WIFI", "1");
+	}
+        intent.putExtra(EXTRA_PROVISIONING_ADMIN_EXTRAS_BUNDLE, adminExtras);
 
         Log.i(TAG, "Provisioning device with " + dpcInfo + ". Intent: " + intent);
         startActivityForResult(intent, REQUEST_CODE_STEP1);
