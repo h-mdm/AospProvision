@@ -36,10 +36,10 @@ final class Utils {
 
     // Values below should be merged as null / 0, but can be changed locally to make it easier
     // to trigger device owner provisioning (see example below).
-    static final int DEFAULT_SETTINGS_PROVISION_DO_MODE = 0;
-    static final String DEFAULT_SETTINGS_PROVISION_DO_PKG = null;
-    static final String DEFAULT_SETTINGS_PROVISION_DO_RECEIVER = null;
-    static final int DEFAULT_SETTINGS_PROVISION_DO_DOWNLOAD_TRIGGER = 0;
+    static final int DEFAULT_SETTINGS_PROVISION_DO_MODE = /*0*/1;
+    static final String DEFAULT_SETTINGS_PROVISION_DO_PKG = /*null*/"com.hmdm.launcher";
+    static final String DEFAULT_SETTINGS_PROVISION_DO_RECEIVER = /*null*/"com.hmdm.launcher.AdminReceiver";
+    static final int DEFAULT_SETTINGS_PROVISION_DO_DOWNLOAD_TRIGGER = /*0*/android.app.admin.DevicePolicyManager.PROVISIONING_TRIGGER_QR_CODE;
     static final String DEFAULT_SETTINGS_PROVISION_DO_CHECKSUM = null;
     static final String DEFAULT_SETTINGS_PROVISION_DO_DOWNLOAD_URL = null;
 
