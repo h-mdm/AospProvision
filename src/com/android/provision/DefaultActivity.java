@@ -19,6 +19,7 @@ package com.android.provision;
 import static android.app.admin.DevicePolicyManager.ACTION_PROVISION_MANAGED_DEVICE_FROM_TRUSTED_SOURCE;
 import static android.app.admin.DevicePolicyManager.EXTRA_PROVISIONING_DEVICE_ADMIN_COMPONENT_NAME;
 import static android.app.admin.DevicePolicyManager.EXTRA_PROVISIONING_DEVICE_ADMIN_PACKAGE_DOWNLOAD_LOCATION;
+import static android.app.admin.DevicePolicyManager.EXTRA_PROVISIONING_SKIP_ENCRYPTION;
 import static android.app.admin.DevicePolicyManager.EXTRA_PROVISIONING_DEVICE_ADMIN_SIGNATURE_CHECKSUM;
 import static android.app.admin.DevicePolicyManager.EXTRA_PROVISIONING_LEAVE_ALL_SYSTEM_APPS_ENABLED;
 import static android.app.admin.DevicePolicyManager.EXTRA_PROVISIONING_ADMIN_EXTRAS_BUNDLE;
@@ -70,6 +71,8 @@ public class DefaultActivity extends Activity {
     // TODO(b/170333009): copied from ManagedProvisioning app, as they're hidden;
     private static final String PROVISION_FINALIZATION_INSIDE_SUW =
             "android.app.action.PROVISION_FINALIZATION_INSIDE_SUW";
+    private static final String PROVISION_FINALIZATION =
+            "android.app.action.PROVISION_FINALIZATION";
     private static final int RESULT_CODE_PROFILE_OWNER_SET = 122;
     private static final int RESULT_CODE_DEVICE_OWNER_SET = 123;
 
@@ -142,6 +145,7 @@ public class DefaultActivity extends Activity {
             intent.putExtra(EXTRA_PROVISIONING_DEVICE_ADMIN_PACKAGE_DOWNLOAD_LOCATION,
                     dpcInfo.downloadUrl);
         }
+        intent.putExtra(EXTRA_PROVISIONING_SKIP_ENCRYPTION, true);
 
         // Parameters used by Headwind MDM 
         intent.putExtra(EXTRA_PROVISIONING_LEAVE_ALL_SYSTEM_APPS_ENABLED, true);
@@ -194,6 +198,14 @@ public class DefaultActivity extends Activity {
             case RESULT_CODE_DEVICE_OWNER_SET:
                 requestCodeStep2 = REQUEST_CODE_STEP2_DO;
                 break;
+            case RESULT_OK:
+                setProvisioningState();
+                Intent intent = new Intent(PROVISION_FINALIZATION)
+                    .addCategory(Intent.CATEGORY_DEFAULT);
+                startActivity(intent);
+                Log.i(TAG, "Finalizing DPC with " + intent);
+                disableSelfAndFinish();
+                return;
             default:
                 factoryReset("invalid response from "
                         + ACTION_PROVISION_MANAGED_DEVICE_FROM_TRUSTED_SOURCE + ": "
